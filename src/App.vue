@@ -10,7 +10,7 @@
   <button type="submit" class="btn btn-primary">Add To Do</button>
   <h3 ></h3>
   <ul class="list-group" mt-3>
-    <li v-for="(todo, i) in ToDos" class="list-group-item">
+    <li v-for="(todo, i) in todos" class="list-group-item">
       <button 
         @click="markDone(todo)"
         v-if="!todo.done"
@@ -43,12 +43,25 @@ export default {
   data() {
     return {
       newToDo: "",
-      ToDos: []
+      todos: []
     };
+  },
+  watch: {
+    todos: {
+      handler() {
+        localStorage.todos = JSON.stringify(this.todos);
+      },
+      deep: true
+    }
+  },
+  mounted() {
+    if (localStorage.todos) {
+      this.todos = JSON.parse(localStorage.todos);
+    }
   },
   methods: {
     addToDo() {
-      this.ToDos.push({
+      this.todos.push({
         title: this.newToDo,
         done: false
       });
@@ -59,7 +72,7 @@ export default {
     },
     removeTodo(index) {
       // console.log(index);
-      this.ToDos.splice(index, 1);
+      this.todos.splice(index, 1);
     }
   }
 };
